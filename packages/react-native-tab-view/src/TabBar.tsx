@@ -20,6 +20,7 @@ import {
 } from './TabBarIndicator';
 import { type Props as TabBarItemProps, TabBarItem } from './TabBarItem';
 import type {
+  AnimatedStyles,
   Event,
   Layout,
   LocaleDirection,
@@ -35,8 +36,6 @@ export type Props<T extends Route> = SceneRendererProps & {
   navigationState: NavigationState<T>;
   scrollEnabled?: boolean;
   bounces?: boolean;
-  activeColor?: string;
-  inactiveColor?: string;
   pressColor?: string;
   pressOpacity?: number;
   options?: Record<string, TabDescriptor<T>>;
@@ -55,6 +54,7 @@ export type Props<T extends Route> = SceneRendererProps & {
   gap?: number;
   testID?: string;
   android_ripple?: PressableAndroidRippleConfig;
+  animatedStyles?: AnimatedStyles;
 };
 
 const useNativeDriver = Platform.OS !== 'web';
@@ -336,10 +336,8 @@ export function TabBar<T extends Route>({
   jumpTo,
   navigationState,
   position,
-  activeColor,
   bounces,
   contentContainerStyle,
-  inactiveColor,
   indicatorContainerStyle,
   indicatorStyle,
   onTabLongPress,
@@ -354,6 +352,7 @@ export function TabBar<T extends Route>({
   testID,
   android_ripple,
   options,
+  animatedStyles,
 }: Props<T>) {
   const [layout, setLayout] = React.useState<Layout>(
     propLayout ?? { width: 0, height: 0 }
@@ -513,8 +512,6 @@ export function TabBar<T extends Route>({
         labelText,
         accessible,
         accessibilityLabel,
-        activeColor,
-        inactiveColor,
         pressColor,
         pressOpacity,
         onLayout,
@@ -523,6 +520,7 @@ export function TabBar<T extends Route>({
         style: tabStyle,
         defaultTabWidth,
         android_ripple,
+        animatedStyles,
       } satisfies TabBarItemProps<T>;
 
       return (
@@ -540,8 +538,6 @@ export function TabBar<T extends Route>({
       position,
       navigationState,
       options,
-      activeColor,
-      inactiveColor,
       pressColor,
       pressOpacity,
       isWidthDynamic,
@@ -557,6 +553,7 @@ export function TabBar<T extends Route>({
       onTabPress,
       jumpTo,
       onTabLongPress,
+      animatedStyles,
     ]
   );
 

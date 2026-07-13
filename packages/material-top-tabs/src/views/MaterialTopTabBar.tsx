@@ -1,4 +1,3 @@
-import { Text } from '@react-navigation/elements';
 import {
   type ParamListBase,
   type TabNavigationState,
@@ -6,8 +5,8 @@ import {
   useLocale,
   useTheme,
 } from '@react-navigation/native';
-import Color from 'color';
 import { StyleSheet } from 'react-native';
+import Animated from 'react-native-reanimated';
 import {
   type Route,
   TabBar,
@@ -22,18 +21,18 @@ type MaterialLabelProps = Parameters<
 >[0];
 
 const renderLabelDefault = ({
-  color,
   labelText,
   style,
   allowFontScaling,
+  animatedStyles,
 }: MaterialLabelProps) => {
   return (
-    <Text
-      style={[{ color }, styles.label, style]}
+    <Animated.Text
+      style={[styles.label, style, animatedStyles]}
       allowFontScaling={allowFontScaling}
     >
       {labelText}
-    </Text>
+    </Animated.Text>
   );
 };
 
@@ -48,11 +47,6 @@ export function MaterialTopTabBar({
   const { buildHref } = useLinkBuilder();
 
   const focusedOptions = descriptors[state.routes[state.index].key].options;
-
-  const activeColor = focusedOptions.tabBarActiveTintColor ?? colors.text;
-  const inactiveColor =
-    focusedOptions.tabBarInactiveTintColor ??
-    Color(activeColor).alpha(0.5).rgb().string();
 
   const tabBarOptions = Object.fromEntries(
     state.routes.map((route) => {
@@ -83,10 +77,10 @@ export function MaterialTopTabBar({
             tabBarShowLabel === false
               ? undefined
               : typeof tabBarLabel === 'function'
-                ? ({ labelText, color }: MaterialLabelProps) =>
+                ? ({ labelText, animatedStyles }: MaterialLabelProps) =>
                     tabBarLabel({
                       focused: state.routes[state.index].key === route.key,
-                      color,
+                      animatedStyles,
                       children: labelText ?? route.name,
                     })
                 : renderLabelDefault,
@@ -113,8 +107,6 @@ export function MaterialTopTabBar({
       direction={direction}
       scrollEnabled={focusedOptions.tabBarScrollEnabled}
       bounces={focusedOptions.tabBarBounces}
-      activeColor={activeColor}
-      inactiveColor={inactiveColor}
       pressColor={focusedOptions.tabBarPressColor}
       pressOpacity={focusedOptions.tabBarPressOpacity}
       tabStyle={focusedOptions.tabBarItemStyle}

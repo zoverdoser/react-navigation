@@ -1,16 +1,24 @@
 import React from 'react';
-import type { StyleProp, ViewStyle } from 'react-native';
-import { Animated, StyleSheet } from 'react-native';
+import type { StyleProp, TextStyle } from 'react-native';
+import { StyleSheet } from 'react-native';
+import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 
 interface TabBarItemLabelProps {
-  color: string;
   label?: string;
-  style: StyleProp<ViewStyle>;
+  style: StyleProp<TextStyle>;
+  animatedStyles: AnimatedStyle<TextStyle>;
   icon: React.ReactNode;
+  labelAllowFontScaling?: boolean;
 }
 
 export const TabBarItemLabel = React.memo(
-  ({ color, label, style, icon }: TabBarItemLabelProps) => {
+  ({
+    label,
+    style,
+    animatedStyles,
+    icon,
+    labelAllowFontScaling,
+  }: TabBarItemLabelProps) => {
     if (!label) {
       return null;
     }
@@ -19,10 +27,11 @@ export const TabBarItemLabel = React.memo(
       <Animated.Text
         style={[
           styles.label,
-          icon ? { marginTop: 0 } : null,
+          icon ? { marginTop: 0 } : undefined,
           style,
-          { color: color },
+          animatedStyles,
         ]}
+        allowFontScaling={labelAllowFontScaling}
       >
         {label}
       </Animated.Text>

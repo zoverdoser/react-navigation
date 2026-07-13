@@ -8,6 +8,7 @@ export { TabBarItem } from './TabBarItem';
 export type { Props as TabViewProps } from './TabView';
 export { TabView } from './TabView';
 export type {
+  AnimatedStyles,
   NavigationState,
   Route,
   SceneRendererProps,

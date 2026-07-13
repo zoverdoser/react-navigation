@@ -198,7 +198,7 @@ export function Drawer({
           restDisplacementThreshold: 0.01,
           restSpeedThreshold: 0.01,
           reduceMotion: ReduceMotion.Never,
-        },
+        } as any,
         (finished) => runOnJS(onAnimationEnd)(open, finished)
       );
 

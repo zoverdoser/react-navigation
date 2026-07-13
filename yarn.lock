@@ -5306,6 +5306,7 @@ __metadata:
     react: ">= 18.2.0"
     react-native: "*"
     react-native-pager-view: ">= 6.0.0"
+    react-native-reanimated: ">= 2.0.0"
     react-native-safe-area-context: ">= 4.0.0"
   languageName: unknown
   linkType: soft
@@ -14916,6 +14917,7 @@ __metadata:
     react: ">= 18.2.0"
     react-native: "*"
     react-native-pager-view: ">= 6.0.0"
+    react-native-reanimated: ">= 2.0.0"
   languageName: unknown
   linkType: soft
 

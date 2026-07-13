@@ -9,18 +9,26 @@ import {
   View,
   type ViewStyle,
 } from 'react-native';
+import {
+  interpolateColor,
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated';
 import useLatestCallback from 'use-latest-callback';
 
 import { PlatformPressable } from './PlatformPressable';
 import { TabBarItemLabel } from './TabBarItemLabel';
-import type { NavigationState, Route, TabDescriptor } from './types';
+import type {
+  AnimatedStyles,
+  NavigationState,
+  Route,
+  TabDescriptor,
+} from './types';
 
 export type Props<T extends Route> = TabDescriptor<T> & {
   position: Animated.AnimatedInterpolation<number>;
   route: T;
   navigationState: NavigationState<T>;
-  activeColor?: string;
-  inactiveColor?: string;
   pressColor?: string;
   pressOpacity?: number;
   onLayout?: (event: LayoutChangeEvent) => void;
@@ -29,45 +37,12 @@ export type Props<T extends Route> = TabDescriptor<T> & {
   defaultTabWidth?: number;
   style: StyleProp<ViewStyle>;
   android_ripple?: PressableAndroidRippleConfig;
+  animatedStyles?: AnimatedStyles;
 };
 
 const DEFAULT_ACTIVE_COLOR = 'rgba(255, 255, 255, 1)';
 const DEFAULT_INACTIVE_COLOR = 'rgba(255, 255, 255, 0.7)';
 const ICON_SIZE = 24;
-
-const getActiveOpacity = (
-  position: Animated.AnimatedInterpolation<number>,
-  routesLength: number,
-  tabIndex: number
-) => {
-  if (routesLength > 1) {
-    const inputRange = Array.from({ length: routesLength }, (_, i) => i);
-
-    return position.interpolate({
-      inputRange,
-      outputRange: inputRange.map((i) => (i === tabIndex ? 1 : 0)),
-    });
-  } else {
-    return 1;
-  }
-};
-
-const getInactiveOpacity = (
-  position: Animated.AnimatedInterpolation<number>,
-  routesLength: number,
-  tabIndex: number
-) => {
-  if (routesLength > 1) {
-    const inputRange = Array.from({ length: routesLength }, (_, i) => i);
-
-    return position.interpolate({
-      inputRange,
-      outputRange: inputRange.map((i: number) => (i === tabIndex ? 0 : 1)),
-    });
-  } else {
-    return 0;
-  }
-};
 
 type TabBarItemInternalProps<T extends Route> = Omit<
   Props<T>,
@@ -95,8 +70,6 @@ const TabBarItemInternal = <T extends Route>({
   isFocused,
   position,
   style,
-  inactiveColor: inactiveColorCustom,
-  activeColor: activeColorCustom,
   labelStyle,
   onLayout,
   index: tabIndex,
@@ -111,93 +84,122 @@ const TabBarItemInternal = <T extends Route>({
   android_ripple = ANDROID_RIPPLE_DEFAULT,
   labelAllowFontScaling,
   route,
+  animatedStyles,
 }: TabBarItemInternalProps<T>) => {
+  const inputRange = React.useMemo(
+    () =>
+      routesLength >= 2
+        ? Array.from({ length: routesLength }, (_, i) => i)
+        : [0, 1],
+    [routesLength]
+  );
   const labelColorFromStyle = StyleSheet.flatten(labelStyle || {}).color;
 
-  const activeColor =
-    activeColorCustom !== undefined
-      ? activeColorCustom
-      : typeof labelColorFromStyle === 'string'
-        ? labelColorFromStyle
-        : DEFAULT_ACTIVE_COLOR;
-  const inactiveColor =
-    inactiveColorCustom !== undefined
-      ? inactiveColorCustom
-      : typeof labelColorFromStyle === 'string'
-        ? labelColorFromStyle
-        : DEFAULT_INACTIVE_COLOR;
+  const activeColor = animatedStyles?.color
+    ? animatedStyles?.color[1]
+    : typeof labelColorFromStyle === 'string'
+      ? labelColorFromStyle
+      : DEFAULT_ACTIVE_COLOR;
+  const inactiveColor = animatedStyles?.color
+    ? animatedStyles?.color[0]
+    : typeof labelColorFromStyle === 'string'
+      ? labelColorFromStyle
+      : DEFAULT_INACTIVE_COLOR;
 
-  const activeOpacity = getActiveOpacity(position, routesLength, tabIndex);
-  const inactiveOpacity = getInactiveOpacity(position, routesLength, tabIndex);
+  const ReAnimatedProgress = useSharedValue(isFocused ? 1 : 0);
+
+  React.useEffect(() => {
+    const listenerId = position.addListener(({ value }) => {
+      const progress =
+        Math.abs(tabIndex - value) > 1 ? 0 : 1 - Math.abs(tabIndex - value);
+      ReAnimatedProgress.value = progress;
+    });
+    return () => {
+      position.removeListener(listenerId);
+    };
+  }, [position, ReAnimatedProgress, tabIndex, route.key]);
+
+  const ReAnimatedStyleRef = React.useRef(
+    useAnimatedStyle(() => {
+      const color = interpolateColor(
+        ReAnimatedProgress.value,
+        [0, 1],
+        [inactiveColor, activeColor]
+      );
+      return { color };
+    }, [ReAnimatedProgress, activeColor, inactiveColor])
+  );
+
+  const opacity = animatedStyles?.opacity
+    ? position.interpolate({
+        inputRange,
+        outputRange: inputRange.map((i) =>
+          i === tabIndex
+            ? animatedStyles.opacity![1]
+            : animatedStyles.opacity![0]
+        ),
+        extrapolate: 'clamp',
+      })
+    : 1;
+
+  const scale = animatedStyles?.scale
+    ? position.interpolate({
+        inputRange,
+        outputRange: inputRange.map((i) =>
+          i === tabIndex ? animatedStyles.scale![1] : animatedStyles.scale![0]
+        ),
+        extrapolate: 'clamp',
+      })
+    : 1;
 
   const icon = React.useMemo(() => {
     if (!customIcon) {
       return null;
     }
 
-    const inactiveIcon = customIcon({
-      focused: false,
-      color: inactiveColor,
-      size: ICON_SIZE,
-      route,
-    });
-
-    const activeIcon = customIcon({
-      focused: true,
-      color: activeColor,
+    const iconEle = customIcon({
+      focused: isFocused,
+      color: ReAnimatedStyleRef.current.color,
       size: ICON_SIZE,
       route,
     });
 
     return (
       <View style={styles.icon}>
-        <Animated.View style={{ opacity: inactiveOpacity }}>
-          {inactiveIcon}
-        </Animated.View>
-        <Animated.View
-          style={[StyleSheet.absoluteFill, { opacity: activeOpacity }]}
-        >
-          {activeIcon}
-        </Animated.View>
+        <Animated.View style={{ opacity }}>{iconEle}</Animated.View>
       </View>
     );
-  }, [
-    activeColor,
-    activeOpacity,
-    customIcon,
-    inactiveColor,
-    inactiveOpacity,
-    route,
-  ]);
+  }, [route, customIcon, isFocused, ReAnimatedStyleRef, opacity]);
 
   const renderLabel = React.useCallback(
-    (focused: boolean) =>
+    () =>
       customlabel ? (
         customlabel({
-          focused,
-          color: focused ? activeColor : inactiveColor,
+          focused: isFocused,
           style: labelStyle,
+          animatedStyles: ReAnimatedStyleRef.current,
           labelText,
           allowFontScaling: labelAllowFontScaling,
           route,
         })
       ) : (
         <TabBarItemLabel
-          color={focused ? activeColor : inactiveColor}
           icon={icon}
           label={labelText}
           style={labelStyle}
+          animatedStyles={ReAnimatedStyleRef.current}
+          labelAllowFontScaling={labelAllowFontScaling}
         />
       ),
     [
       customlabel,
-      activeColor,
       labelStyle,
       labelText,
       labelAllowFontScaling,
       route,
-      inactiveColor,
       icon,
+      isFocused,
+      ReAnimatedStyleRef,
     ]
   );
 
@@ -228,22 +230,16 @@ const TabBarItemInternal = <T extends Route>({
       href={href}
       style={[styles.pressable, tabContainerStyle]}
     >
-      <View pointerEvents="none" style={[styles.item, tabStyle]}>
+      <Animated.View
+        pointerEvents="none"
+        style={[styles.item, tabStyle, { opacity, transform: [{ scale }] }]}
+      >
         {icon}
-        <View>
-          <Animated.View style={{ opacity: inactiveOpacity }}>
-            {renderLabel(false)}
-          </Animated.View>
-          <Animated.View
-            style={[StyleSheet.absoluteFill, { opacity: activeOpacity }]}
-          >
-            {renderLabel(true)}
-          </Animated.View>
-        </View>
+        <View>{renderLabel()}</View>
         {customBadge != null ? (
           <View style={styles.badge}>{customBadge({ route })}</View>
         ) : null}
-      </View>
+      </Animated.View>
     </PlatformPressable>
   );
 };

@@ -1,5 +1,6 @@
 import type { Animated, StyleProp, TextStyle, ViewStyle } from 'react-native';
 import type { PagerViewProps } from 'react-native-pager-view';
+import type { AnimatedStyle } from 'react-native-reanimated';
 
 export type TabDescriptor<T extends Route> = {
   accessibilityLabel?: string;
@@ -12,9 +13,9 @@ export type TabDescriptor<T extends Route> = {
     route: T;
     labelText?: string;
     focused: boolean;
-    color: string;
     allowFontScaling?: boolean;
     style?: StyleProp<TextStyle>;
+    animatedStyles?: AnimatedStyle<TextStyle>;
   }) => React.ReactNode;
   labelStyle?: StyleProp<TextStyle>;
   icon?: (props: {
@@ -84,4 +85,10 @@ export type PagerProps = Omit<
   animationEnabled?: boolean;
   onSwipeStart?: () => void;
   onSwipeEnd?: () => void;
+};
+
+export type AnimatedStyles = {
+  color?: [string, string];
+  opacity?: [number, number];
+  scale?: [number, number];
 };

@@ -19,6 +19,7 @@ import type {
   TextStyle,
   ViewStyle,
 } from 'react-native';
+import type { AnimatedStyle } from 'react-native-reanimated';
 import type {
   SceneRendererProps,
   TabBar,
@@ -97,7 +98,7 @@ export type MaterialTopTabNavigationOptions = {
     | string
     | ((props: {
         focused: boolean;
-        color: string;
+        animatedStyles?: AnimatedStyle<TextStyle>;
         children: string;
       }) => React.ReactNode);
 
