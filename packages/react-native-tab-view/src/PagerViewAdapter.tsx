@@ -1,8 +1,14 @@
 import * as React from 'react';
-import { Animated, Keyboard, Platform, StyleSheet } from 'react-native';
+import { Animated, Keyboard, StyleSheet } from 'react-native';
 import ViewPager, {
+  type PagerViewOnPageScrollEventData,
   type PageScrollStateChangedNativeEvent,
 } from 'react-native-pager-view';
+import Reanimated, {
+  type SharedValue,
+  useEvent,
+  useSharedValue,
+} from 'react-native-reanimated';
 import useLatestCallback from 'use-latest-callback';
 
 import type {
@@ -14,7 +20,18 @@ import type {
 } from './types';
 import { useAnimatedValue } from './useAnimatedValue';
 
-const AnimatedViewPager = Animated.createAnimatedComponent(ViewPager);
+const AnimatedViewPager = Reanimated.createAnimatedComponent(ViewPager);
+
+const attachNativeEvent = (
+  Animated as typeof Animated & {
+    attachNativeEvent: (
+      viewRef: unknown,
+      eventName: string,
+      argMapping: readonly unknown[],
+      platformConfig?: unknown
+    ) => { detach: () => void };
+  }
+).attachNativeEvent;
 
 type Props<T extends Route> = PagerProps & {
   onIndexChange: (index: number) => void;
@@ -25,6 +42,8 @@ type Props<T extends Route> = PagerProps & {
       // Animated value which represents the state of current index
       // It can include fractional digits as it represents the intermediate value
       position: Animated.AnimatedInterpolation<number>;
+      // Reanimated value updated directly from the native page scroll event
+      animatedPosition: SharedValue<number>;
       // Function to actually render the content of the pager
       // The parent component takes care of rendering
       render: (children: React.ReactNode) => React.ReactNode;
@@ -34,8 +53,6 @@ type Props<T extends Route> = PagerProps & {
     }
   ) => React.ReactElement;
 };
-
-const useNativeDriver = Platform.OS !== 'web';
 
 export function PagerViewAdapter<T extends Route>({
   keyboardDismissMode = 'auto',
@@ -60,6 +77,35 @@ export function PagerViewAdapter<T extends Route>({
 
   const position = useAnimatedValue(index);
   const offset = useAnimatedValue(0);
+  const animatedPosition = useSharedValue(index);
+
+  const onPageScroll = useEvent<PagerViewOnPageScrollEventData>(
+    (event) => {
+      'worklet';
+      if (event.eventName.endsWith('onPageScroll')) {
+        animatedPosition.value = event.position + event.offset;
+      }
+    },
+    ['onPageScroll']
+  );
+
+  React.useEffect(() => {
+    const subscription = attachNativeEvent(
+      pagerRef.current,
+      'onPageScroll',
+      [
+        {
+          nativeEvent: {
+            position,
+            offset,
+          },
+        },
+      ],
+      undefined
+    );
+
+    return () => subscription.detach();
+  }, [offset, position]);
 
   React.useEffect(() => {
     navigationStateRef.current = navigationState;
@@ -75,6 +121,7 @@ export function PagerViewAdapter<T extends Route>({
     } else {
       pagerRef.current?.setPageWithoutAnimation(index);
       position.setValue(index);
+      animatedPosition.value = index;
     }
 
     onIndexChange(index);
@@ -91,9 +138,16 @@ export function PagerViewAdapter<T extends Route>({
       } else {
         pagerRef.current?.setPageWithoutAnimation(index);
         position.setValue(index);
+        animatedPosition.value = index;
       }
     }
-  }, [keyboardDismissMode, index, animationEnabled, position]);
+  }, [
+    keyboardDismissMode,
+    index,
+    animationEnabled,
+    position,
+    animatedPosition,
+  ]);
 
   const onPageScrollStateChanged = (
     state: PageScrollStateChangedNativeEvent
@@ -142,6 +196,7 @@ export function PagerViewAdapter<T extends Route>({
 
   return children({
     position: memoizedPosition,
+    animatedPosition,
     addEnterListener,
     jumpTo,
     render: (children) => (
@@ -153,20 +208,15 @@ export function PagerViewAdapter<T extends Route>({
         keyboardDismissMode={
           keyboardDismissMode === 'auto' ? 'on-drag' : keyboardDismissMode
         }
-        onPageScroll={Animated.event(
-          [
-            {
-              nativeEvent: {
-                position: position,
-                offset: offset,
-              },
-            },
-          ],
-          { useNativeDriver }
-        )}
+        onPageScroll={
+          onPageScroll as unknown as React.ComponentProps<
+            typeof AnimatedViewPager
+          >['onPageScroll']
+        }
         onPageSelected={(e) => {
           const index = e.nativeEvent.position;
           indexRef.current = index;
+          animatedPosition.value = index;
           onIndexChange(index);
           onTabSelect?.({ index });
         }}

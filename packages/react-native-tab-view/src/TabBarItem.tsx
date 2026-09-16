@@ -9,9 +9,11 @@ import {
   View,
   type ViewStyle,
 } from 'react-native';
+import type { SharedValue } from 'react-native-reanimated';
 import {
   interpolateColor,
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
 } from 'react-native-reanimated';
 import useLatestCallback from 'use-latest-callback';
@@ -27,6 +29,7 @@ import type {
 
 export type Props<T extends Route> = TabDescriptor<T> & {
   position: Animated.AnimatedInterpolation<number>;
+  animatedPosition?: SharedValue<number>;
   route: T;
   navigationState: NavigationState<T>;
   pressColor?: string;
@@ -44,40 +47,6 @@ const DEFAULT_ACTIVE_COLOR = 'rgba(255, 255, 255, 1)';
 const DEFAULT_INACTIVE_COLOR = 'rgba(255, 255, 255, 0.7)';
 const ICON_SIZE = 24;
 
-const getActiveOpacity = (
-  position: Animated.AnimatedInterpolation<number>,
-  routesLength: number,
-  tabIndex: number
-) => {
-  if (routesLength > 1) {
-    const inputRange = Array.from({ length: routesLength }, (_, i) => i);
-
-    return position.interpolate({
-      inputRange,
-      outputRange: inputRange.map((i) => (i === tabIndex ? 1 : 0)),
-    });
-  }
-
-  return 1;
-};
-
-const getInactiveOpacity = (
-  position: Animated.AnimatedInterpolation<number>,
-  routesLength: number,
-  tabIndex: number
-) => {
-  if (routesLength > 1) {
-    const inputRange = Array.from({ length: routesLength }, (_, i) => i);
-
-    return position.interpolate({
-      inputRange,
-      outputRange: inputRange.map((i) => (i === tabIndex ? 0 : 1)),
-    });
-  }
-
-  return 0;
-};
-
 type TabBarItemInternalProps<T extends Route> = Omit<
   Props<T>,
   | 'navigationState'
@@ -89,7 +58,6 @@ type TabBarItemInternalProps<T extends Route> = Omit<
 > & {
   isFocused: boolean;
   index: number;
-  routesLength: number;
 } & TabDescriptor<T>;
 
 const ANDROID_RIPPLE_DEFAULT = { borderless: true };
@@ -103,6 +71,7 @@ const TabBarItemInternal = <T extends Route>({
   onPress,
   isFocused,
   position,
+  animatedPosition,
   style,
   labelStyle,
   onLayout,
@@ -114,18 +83,14 @@ const TabBarItemInternal = <T extends Route>({
   badge: customBadge,
   href,
   labelText,
-  routesLength,
   android_ripple = ANDROID_RIPPLE_DEFAULT,
   labelAllowFontScaling,
   route,
   animatedStyles,
 }: TabBarItemInternalProps<T>) => {
   const inputRange = React.useMemo(
-    () =>
-      routesLength >= 2
-        ? Array.from({ length: routesLength }, (_, i) => i)
-        : [0, 1],
-    [routesLength]
+    () => [tabIndex - 1, tabIndex, tabIndex + 1],
+    [tabIndex]
   );
   const labelColorFromStyle = StyleSheet.flatten(labelStyle || {}).color;
 
@@ -140,52 +105,92 @@ const TabBarItemInternal = <T extends Route>({
       ? labelColorFromStyle
       : DEFAULT_INACTIVE_COLOR;
 
-  const ReAnimatedProgress = useSharedValue(isFocused ? 1 : 0);
+  const fallbackProgress = useSharedValue(isFocused ? 1 : 0);
 
   React.useEffect(() => {
+    if (animatedPosition != null) {
+      return;
+    }
+
     const listenerId = position.addListener(({ value }) => {
       const progress =
         Math.abs(tabIndex - value) > 1 ? 0 : 1 - Math.abs(tabIndex - value);
-      ReAnimatedProgress.value = progress;
+      fallbackProgress.value = progress;
     });
+
     return () => {
       position.removeListener(listenerId);
     };
-  }, [position, ReAnimatedProgress, tabIndex, route.key]);
+  }, [animatedPosition, fallbackProgress, position, tabIndex]);
+
+  const reanimatedProgress = useDerivedValue(() => {
+    if (animatedPosition != null) {
+      return Math.max(0, 1 - Math.abs(tabIndex - animatedPosition.value));
+    }
+
+    return fallbackProgress.value;
+  }, [animatedPosition, fallbackProgress, tabIndex]);
 
   const reanimatedStyle = useAnimatedStyle(() => {
     const color = interpolateColor(
-      ReAnimatedProgress.value,
+      reanimatedProgress.value,
       [0, 1],
       [inactiveColor, activeColor]
     );
     return { color };
-  }, [ReAnimatedProgress, activeColor, inactiveColor]);
+  }, [reanimatedProgress, activeColor, inactiveColor]);
 
-  const itemOpacity = animatedStyles?.opacity
-    ? position.interpolate({
+  const inactiveItemOpacity = animatedStyles?.opacity?.[0];
+  const activeItemOpacity = animatedStyles?.opacity?.[1];
+  const inactiveScale = animatedStyles?.scale?.[0];
+  const activeScale = animatedStyles?.scale?.[1];
+
+  const itemOpacity = React.useMemo(
+    () =>
+      inactiveItemOpacity !== undefined && activeItemOpacity !== undefined
+        ? position.interpolate({
+            inputRange,
+            outputRange: [
+              inactiveItemOpacity,
+              activeItemOpacity,
+              inactiveItemOpacity,
+            ],
+            extrapolate: 'clamp',
+          })
+        : 1,
+    [activeItemOpacity, inactiveItemOpacity, inputRange, position]
+  );
+
+  const activeOpacity = React.useMemo(
+    () =>
+      position.interpolate({
         inputRange,
-        outputRange: inputRange.map((i) =>
-          i === tabIndex
-            ? animatedStyles.opacity![1]
-            : animatedStyles.opacity![0]
-        ),
+        outputRange: [0, 1, 0],
         extrapolate: 'clamp',
-      })
-    : 1;
-
-  const activeOpacity = getActiveOpacity(position, routesLength, tabIndex);
-  const inactiveOpacity = getInactiveOpacity(position, routesLength, tabIndex);
-
-  const scale = animatedStyles?.scale
-    ? position.interpolate({
+      }),
+    [inputRange, position]
+  );
+  const inactiveOpacity = React.useMemo(
+    () =>
+      position.interpolate({
         inputRange,
-        outputRange: inputRange.map((i) =>
-          i === tabIndex ? animatedStyles.scale![1] : animatedStyles.scale![0]
-        ),
+        outputRange: [1, 0, 1],
         extrapolate: 'clamp',
-      })
-    : 1;
+      }),
+    [inputRange, position]
+  );
+
+  const scale = React.useMemo(
+    () =>
+      inactiveScale !== undefined && activeScale !== undefined
+        ? position.interpolate({
+            inputRange,
+            outputRange: [inactiveScale, activeScale, inactiveScale],
+            extrapolate: 'clamp',
+          })
+        : 1,
+    [activeScale, inactiveScale, inputRange, position]
+  );
 
   const icon = React.useMemo(() => {
     if (!customIcon) {
@@ -327,7 +332,6 @@ export function TabBarItem<T extends Route>(props: Props<T>) {
       isFocused={navigationState.index === tabIndex}
       route={route}
       index={tabIndex}
-      routesLength={navigationState.routes.length}
     />
   );
 }

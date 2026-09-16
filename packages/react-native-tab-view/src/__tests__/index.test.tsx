@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, jest, test } from '@jest/globals';
 import { act, render, userEvent } from '@testing-library/react-native';
 import * as React from 'react';
 import { Platform, View } from 'react-native';
-import { setUpTests } from 'react-native-reanimated';
+import { setUpTests, type SharedValue } from 'react-native-reanimated';
 
 import { SceneMap, TabView } from '../index';
 
@@ -64,8 +64,10 @@ const renderScene = SceneMap({
 
 const Test = ({
   onTabSelect,
+  onRenderTabBar,
 }: {
   onTabSelect?: (props: { index: number }) => void;
+  onRenderTabBar?: (position: SharedValue<number> | undefined) => void;
 }) => {
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
@@ -79,6 +81,14 @@ const Test = ({
       renderScene={renderScene}
       onIndexChange={setIndex}
       onTabSelect={onTabSelect}
+      renderTabBar={
+        onRenderTabBar == null
+          ? undefined
+          : ({ animatedPosition }) => {
+              onRenderTabBar(animatedPosition);
+              return null;
+            }
+      }
     />
   );
 };
@@ -98,6 +108,20 @@ describe.each([{ type: 'ios' as const }, { type: 'web' as const }])(
 
       expect(getByTestId('route1')).toBeTruthy();
       expect(queryByTestId('route2')).toBeNull();
+    });
+
+    test('provides a UI-thread position for the native pager', () => {
+      let animatedPosition: SharedValue<number> | undefined;
+
+      render(
+        <Test
+          onRenderTabBar={(position) => {
+            animatedPosition = position;
+          }}
+        />
+      );
+
+      expect(animatedPosition).toBeDefined();
     });
 
     test('switches tabs on tab press in the tab bar', async () => {

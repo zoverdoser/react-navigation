@@ -336,6 +336,7 @@ export function TabBar<T extends Route>({
   jumpTo,
   navigationState,
   position,
+  animatedPosition,
   bounces,
   contentContainerStyle,
   indicatorContainerStyle,
@@ -362,6 +363,40 @@ export function TabBar<T extends Route>({
   const isFirst = React.useRef(true);
   const scrollAmount = useAnimatedValue(0);
   const { routes } = navigationState;
+  const animatedColorInactive = animatedStyles?.color?.[0];
+  const animatedColorActive = animatedStyles?.color?.[1];
+  const animatedOpacityInactive = animatedStyles?.opacity?.[0];
+  const animatedOpacityActive = animatedStyles?.opacity?.[1];
+  const animatedScaleInactive = animatedStyles?.scale?.[0];
+  const animatedScaleActive = animatedStyles?.scale?.[1];
+  const animatedStylesMemoized = React.useMemo<
+    AnimatedStyles | undefined
+  >(() => {
+    const color: AnimatedStyles['color'] =
+      animatedColorInactive !== undefined && animatedColorActive !== undefined
+        ? [animatedColorInactive, animatedColorActive]
+        : undefined;
+    const opacity: AnimatedStyles['opacity'] =
+      animatedOpacityInactive !== undefined &&
+      animatedOpacityActive !== undefined
+        ? [animatedOpacityInactive, animatedOpacityActive]
+        : undefined;
+    const scale: AnimatedStyles['scale'] =
+      animatedScaleInactive !== undefined && animatedScaleActive !== undefined
+        ? [animatedScaleInactive, animatedScaleActive]
+        : undefined;
+
+    return color === undefined && opacity === undefined && scale === undefined
+      ? undefined
+      : { color, opacity, scale };
+  }, [
+    animatedColorActive,
+    animatedColorInactive,
+    animatedOpacityActive,
+    animatedOpacityInactive,
+    animatedScaleActive,
+    animatedScaleInactive,
+  ]);
   const flattenedTabWidth = getFlattenedTabWidth(tabStyle);
   const isWidthDynamic = flattenedTabWidth === 'auto';
   const flattenedPaddingEnd = getFlattenedPaddingEnd(contentContainerStyle);
@@ -506,6 +541,7 @@ export function TabBar<T extends Route>({
       const props = {
         ...rest,
         position,
+        animatedPosition,
         route,
         navigationState,
         testID,
@@ -520,7 +556,7 @@ export function TabBar<T extends Route>({
         style: tabStyle,
         defaultTabWidth,
         android_ripple,
-        animatedStyles,
+        animatedStyles: animatedStylesMemoized,
       } satisfies TabBarItemProps<T>;
 
       return (
@@ -536,6 +572,7 @@ export function TabBar<T extends Route>({
     },
     [
       position,
+      animatedPosition,
       navigationState,
       options,
       pressColor,
@@ -553,7 +590,7 @@ export function TabBar<T extends Route>({
       onTabPress,
       jumpTo,
       onTabLongPress,
-      animatedStyles,
+      animatedStylesMemoized,
     ]
   );
 

@@ -8,6 +8,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import type { SharedValue } from 'react-native-reanimated';
 import useLatestCallback from 'use-latest-callback';
 
 import type {
@@ -30,6 +31,7 @@ type Props<T extends Route> = PagerProps & {
       // Animated value which represents the state of current index
       // It can include fractional digits as it represents the intermediate value
       position: Animated.AnimatedInterpolation<number>;
+      animatedPosition?: SharedValue<number>;
       // Function to actually render the content of the pager
       // The parent component takes care of rendering
       render: (children: React.ReactNode) => React.ReactNode;
