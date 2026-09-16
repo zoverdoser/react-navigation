@@ -3,6 +3,66 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.19.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.19.0...@react-navigation/native-stack@7.19.1) (2026-09-15)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+# [7.19.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.18.10...@react-navigation/native-stack@7.19.0) (2026-09-15)
+
+### Features
+
+* use a render callback for custom navigators ([#13238](https://github.com/react-navigation/react-navigation/issues/13238)) ([0706d1a](https://github.com/react-navigation/react-navigation/commit/0706d1aaf3ccc4949cb010af661a542021d392c0)) - by @
+
+## [7.18.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.18.9...@react-navigation/native-stack@7.18.10) (2026-08-26)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+## [7.18.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.18.8...@react-navigation/native-stack@7.18.9) (2026-08-19)
+
+### Bug Fixes
+
+* read latest state to determine pop to top ([1a29cb4](https://github.com/react-navigation/react-navigation/commit/1a29cb46ffdd54f6e2f2082526bc7a07870d58b5)) - by @satya164
+
+## [7.18.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.18.7...@react-navigation/native-stack@7.18.8) (2026-08-07)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+## [7.18.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.18.6...@react-navigation/native-stack@7.18.7) (2026-08-05)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+## [7.18.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.18.5...@react-navigation/native-stack@7.18.6) (2026-07-24)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+## [7.18.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.18.4...@react-navigation/native-stack@7.18.5) (2026-07-20)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+## [7.18.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.18.3...@react-navigation/native-stack@7.18.4) (2026-07-20)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+## [7.18.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.18.2...@react-navigation/native-stack@7.18.3) (2026-07-17)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+## [7.18.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.18.1...@react-navigation/native-stack@7.18.2) (2026-07-17)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+## [7.18.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.18.0...@react-navigation/native-stack@7.18.1) (2026-07-16)
+
+### Bug Fixes
+
+* account for disabled top inset for header height ([1c12df8](https://github.com/react-navigation/react-navigation/commit/1c12df8c922e2ddb4a287dbbf8e9009a74f59708)) - by @
+
+# [7.18.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.17.10...@react-navigation/native-stack@7.18.0) (2026-07-16)
+
+### Features
+
+* **native-stack:** add options to disable inset application for header ([#13170](https://github.com/react-navigation/react-navigation/issues/13170)) ([5a6b179](https://github.com/react-navigation/react-navigation/commit/5a6b17971b4b91809995ed23bfc02948d9ed6508)) - by @t0maboro
+
 ## [7.17.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.17.9...@react-navigation/native-stack@7.17.10) (2026-07-07)
 
 **Note:** Version bump only for package @react-navigation/native-stack

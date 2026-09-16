@@ -283,18 +283,24 @@ export function SwitchRouter<Type extends SwitchRouterType>({
         (name) =>
           state.routes.find(
             (r) => r.name === name && !routeKeyChanges.includes(r.name)
-          ) || {
+          ) ?? {
             name,
             key: `${name}-${nanoid()}`,
             params: routeParamList[name],
           }
       );
 
+      const routeKeys = new Set(routes.map((route) => route.key));
+
       const currentRoute = state.routes[state.index];
 
-      let history = state.history.filter(
+      if (currentRoute == null) {
+        throw new Error(`Couldn't find a route at index ${state.index}.`);
+      }
+
+      const history = state.history.filter(
         // Type will always be 'route' for tabs, but could be different in a router extending this (e.g. drawer)
-        (it) => it.type !== 'route' || routes.some((r) => r.key === it.key)
+        (item) => item.type !== 'route' || routeKeys.has(item.key)
       );
 
       let index = routeNames.indexOf(currentRoute.name);
@@ -311,21 +317,19 @@ export function SwitchRouter<Type extends SwitchRouterType>({
         );
       }
 
-      if (!history.length) {
-        history = getRouteHistory(
-          routes,
+      return {
+        ...state,
+        routeNames,
+        routes,
+        ...changeIndex<Type>(
+          { routes, history },
           index,
           backBehavior,
           initialRouteName
-        );
-      }
-
-      return {
-        ...state,
-        history,
-        routeNames,
-        routes,
-        index,
+        ),
+        preloadedRouteKeys: state.preloadedRouteKeys.filter((key) =>
+          routeKeys.has(key)
+        ),
       };
     },
 
@@ -397,12 +401,16 @@ export function SwitchRouter<Type extends SwitchRouterType>({
           const path =
             action.type === 'NAVIGATE' && action.payload.path != null
               ? action.payload.path
-              : route.path;
+              : key === route.key
+                ? route.path
+                : undefined;
 
           const nextRoute =
-            params !== route.params || path !== route.path || key !== route.key
-              ? { ...route, key, path, params }
-              : route;
+            key !== route.key
+              ? { key, name: route.name, path, params }
+              : params !== route.params || path !== route.path
+                ? { ...route, path, params }
+                : route;
 
           const routes = state.routes.map((item, routeIndex) =>
             routeIndex === index ? nextRoute : item
@@ -441,9 +449,16 @@ export function SwitchRouter<Type extends SwitchRouterType>({
             const index = nextState.index;
 
             if (index != null) {
-              const focusedRoute = nextState.routes[index];
+              const route = action.source
+                ? nextState.routes.find((route) => route.key === action.source)
+                : nextState.routes[index];
+
+              if (route === undefined) {
+                return nextState;
+              }
+
               const historyItemIndex = state.history.findLastIndex(
-                (item) => item.type === 'route' && item.key === focusedRoute.key
+                (item) => item.type === 'route' && item.key === route.key
               );
 
               let updatedHistory = state.history;
@@ -455,7 +470,7 @@ export function SwitchRouter<Type extends SwitchRouterType>({
                 if (item.type === 'route') {
                   updatedHistory[historyItemIndex] = {
                     ...item,
-                    params: focusedRoute.params,
+                    params: route.params,
                   };
                 }
               }
@@ -535,7 +550,15 @@ export function SwitchRouter<Type extends SwitchRouterType>({
 
           const params = createParamsFromAction({ action, routeParamList });
           const newRoute =
-            params !== route.params ? { ...route, key, params } : route;
+            key !== route.key
+              ? {
+                  key,
+                  name: route.name,
+                  params,
+                }
+              : params !== route.params
+                ? { ...route, params }
+                : route;
 
           let history = state.history;
 
@@ -551,6 +574,26 @@ export function SwitchRouter<Type extends SwitchRouterType>({
                 params:
                   backBehavior === 'fullHistory' ? newRoute.params : undefined,
               });
+            }
+          } else if (
+            backBehavior === 'fullHistory' &&
+            newRoute.params !== route.params
+          ) {
+            const historyItemIndex = history.findLastIndex(
+              (item) => item.type === 'route' && item.key === route.key
+            );
+
+            if (historyItemIndex !== -1) {
+              history = [...history];
+
+              const item = history[historyItemIndex];
+
+              if (item.type === 'route') {
+                history[historyItemIndex] = {
+                  ...item,
+                  params: newRoute.params,
+                };
+              }
             }
           }
 

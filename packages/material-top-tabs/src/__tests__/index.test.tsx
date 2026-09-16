@@ -4,11 +4,18 @@ import { NavigationContainer } from '@react-navigation/native';
 import { fireEvent, render } from '@testing-library/react-native';
 import * as React from 'react';
 import { Button, View } from 'react-native';
+import { setUpTests } from 'react-native-reanimated';
 
 import {
   createMaterialTopTabNavigator,
   type MaterialTopTabScreenProps,
 } from '../index';
+
+jest.mock('react-native-worklets', () =>
+  require('react-native-worklets/src/mock')
+);
+
+setUpTests();
 
 type TopTabParamList = {
   A: undefined;

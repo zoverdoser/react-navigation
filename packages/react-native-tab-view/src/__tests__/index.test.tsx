@@ -2,8 +2,15 @@ import { beforeEach, describe, expect, jest, test } from '@jest/globals';
 import { act, render, userEvent } from '@testing-library/react-native';
 import * as React from 'react';
 import { Platform, View } from 'react-native';
+import { setUpTests } from 'react-native-reanimated';
 
 import { SceneMap, TabView } from '../index';
+
+jest.mock('react-native-worklets', () =>
+  require('react-native-worklets/src/mock')
+);
+
+setUpTests();
 
 jest.useFakeTimers();
 

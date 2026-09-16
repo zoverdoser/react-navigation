@@ -3,6 +3,57 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.9.42](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.9.41...@react-navigation/elements@2.9.42) (2026-09-15)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+## [2.9.41](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.9.40...@react-navigation/elements@2.9.41) (2026-09-15)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+## [2.9.40](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.9.39...@react-navigation/elements@2.9.40) (2026-08-26)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+## [2.9.39](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.9.38...@react-navigation/elements@2.9.39) (2026-08-19)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+## [2.9.38](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.9.37...@react-navigation/elements@2.9.38) (2026-08-07)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+## [2.9.37](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.9.36...@react-navigation/elements@2.9.37) (2026-08-05)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+## [2.9.36](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.9.35...@react-navigation/elements@2.9.36) (2026-07-24)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+## [2.9.35](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.9.34...@react-navigation/elements@2.9.35) (2026-07-20)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+## [2.9.34](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.9.33...@react-navigation/elements@2.9.34) (2026-07-20)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+## [2.9.33](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.9.32...@react-navigation/elements@2.9.33) (2026-07-17)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+## [2.9.32](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.9.31...@react-navigation/elements@2.9.32) (2026-07-17)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+## [2.9.31](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.9.30...@react-navigation/elements@2.9.31) (2026-07-16)
+
+### Bug Fixes
+
+* fix incorrect target detection for links ([799e39c](https://github.com/react-navigation/react-navigation/commit/799e39cc1527b35ce2028801eea3512e7f7b275f)) - by @satya164
+* prevent full-page navigation on link click for disabled pressables ([dbe4dc9](https://github.com/react-navigation/react-navigation/commit/dbe4dc9ed689ed0af94d7f9b12e4d3ba0ae514b0)) - by @satya164
+
 ## [2.9.30](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.9.29...@react-navigation/elements@2.9.30) (2026-07-07)
 
 **Note:** Version bump only for package @react-navigation/elements

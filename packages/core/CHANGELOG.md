@@ -3,6 +3,81 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.22.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.22.0...@react-navigation/core@7.22.1) (2026-09-15)
+
+**Note:** Version bump only for package @react-navigation/core
+
+# [7.22.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.21.13...@react-navigation/core@7.22.0) (2026-09-15)
+
+### Features
+
+* use a render callback for custom navigators ([#13238](https://github.com/react-navigation/react-navigation/issues/13238)) ([0706d1a](https://github.com/react-navigation/react-navigation/commit/0706d1aaf3ccc4949cb010af661a542021d392c0)) - by @
+
+## [7.21.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.21.12...@react-navigation/core@7.21.13) (2026-08-19)
+
+### Bug Fixes
+
+* fix return type of getRootState ([4e6eaaa](https://github.com/react-navigation/react-navigation/commit/4e6eaaac6fad57d09ab5a828484b8ffeb4cfc6e5)) - by @satya164
+* fix typo with using fallback index when parsing paths ([f64ceef](https://github.com/react-navigation/react-navigation/commit/f64ceef80a49bf05531dc86f23c7b2294ff44a9a)) - by @satya164
+* properly mark unhandled actions that have target ([399f0ba](https://github.com/react-navigation/react-navigation/commit/399f0ba5fe3d608276d8e7bd8f746f03bef2f518)) - by @satya164
+
+## [7.21.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.21.11...@react-navigation/core@7.21.12) (2026-08-07)
+
+### Bug Fixes
+
+* emit `beforeRemove` for nested routes removed by reset ([#13153](https://github.com/react-navigation/react-navigation/issues/13153)) ([e7724dd](https://github.com/react-navigation/react-navigation/commit/e7724dd42f6cc1ea5ab1fc19e4f6d7ab79246ec9)) - by @
+
+## [7.21.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.21.10...@react-navigation/core@7.21.11) (2026-07-24)
+
+### Bug Fixes
+
+* ensure resetRoot always resets the root navigator's state ([bec568c](https://github.com/react-navigation/react-navigation/commit/bec568c8940f4afa85d03b48f9f95ad3b5cc99fa)) - by @satya164
+
+## [7.21.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.21.9...@react-navigation/core@7.21.10) (2026-07-20)
+
+**Note:** Version bump only for package @react-navigation/core
+
+## [7.21.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.21.8...@react-navigation/core@7.21.9) (2026-07-20)
+
+### Bug Fixes
+
+* fix state events and url when navigator mounts later ([5b47c68](https://github.com/react-navigation/react-navigation/commit/5b47c68a0cf1500d7d8fb3a2a23ca3fc78151f56)) - by @satya164
+
+## [7.21.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.21.7...@react-navigation/core@7.21.8) (2026-07-17)
+
+### Bug Fixes
+
+* preserve static param list inference with TypeScript 7 ([#13188](https://github.com/react-navigation/react-navigation/issues/13188)) ([7c51d7d](https://github.com/react-navigation/react-navigation/commit/7c51d7d4b1702aa3028fd57c99ea7efb14a4d7c5)) - by @WookieFPV
+
+## [7.21.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.21.6...@react-navigation/core@7.21.7) (2026-07-17)
+
+### Bug Fixes
+
+* don't ignore navigation from layout effects when screens change ([951b230](https://github.com/react-navigation/react-navigation/commit/951b23017bd65016e00751930a089831a7988db0)) - by @
+* don't overwrite state changes made by 'beforeRemove' listeners ([3185386](https://github.com/react-navigation/react-navigation/commit/31853868c5bf1a3f576283459e3ef30798d4f2b7)) - by @
+* don't revert reset when dispatching another action immediately after ([e78759f](https://github.com/react-navigation/react-navigation/commit/e78759f5b8eb9e0963dd1a57f73c3b7bb692a8ea)) - by @
+* handle navigationKey on nested groups ([387e419](https://github.com/react-navigation/react-navigation/commit/387e419f730b510097056a0dc340dbb919c97c31)) - by @
+* validate navigator type for state passed in params ([2722df9](https://github.com/react-navigation/react-navigation/commit/2722df9e8250d115e3d1811448a5b7105e7552d0)) - by @
+
+## [7.21.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.21.5...@react-navigation/core@7.21.6) (2026-07-16)
+
+### Bug Fixes
+
+* avoid duplicate focus event when navigating to a nested screen ([547088b](https://github.com/react-navigation/react-navigation/commit/547088b0e5c2fc46c77041125a184b9787780907)) - by @satya164
+* avoid extra notifications after unbatched updates ([4d147cf](https://github.com/react-navigation/react-navigation/commit/4d147cfcddfe55a94378de1caf98407978ec661f)) - by @satya164
+* clear focused route state context in NavigationIndependentTree ([6da1ce8](https://github.com/react-navigation/react-navigation/commit/6da1ce845c9b0167e1dc38af015e12ad725210da)) - by @satya164
+* correctly convert paths to kebab-case for screen names with acronyms ([9139d05](https://github.com/react-navigation/react-navigation/commit/9139d05ccd66423d11333980ad7b2fbadb298d6a)) - by @satya164
+* default to last route in findFocusedRoute when index is missing ([fcb5e58](https://github.com/react-navigation/react-navigation/commit/fcb5e58b5a58e90600716bb4678d491b6a8206e9)) - by @satya164
+* don't mark nested params as consumed when initialized state is unused ([8cd2dd2](https://github.com/react-navigation/react-navigation/commit/8cd2dd27143fe4019dec2d5f97ebdf8db1d29727)) - by @satya164
+* don't truncate query string containing an extra question mark ([3369899](https://github.com/react-navigation/react-navigation/commit/336989983fa7a568c3d2410f1c381c8c20019041)) - by @satya164
+* handle escaped and character class parens when parsing path patterns ([813c716](https://github.com/react-navigation/react-navigation/commit/813c7169fdd6c6e97c3502da585624cefbf8d4de)) - by @satya164
+* match custom param regexes against percent-decoded values ([0695964](https://github.com/react-navigation/react-navigation/commit/0695964d1cdc49016d1fc8d13c5932fde2ede4cc)) - by @satya164
+* match percent-encoded static segments and root path prefix ([f1b9ccb](https://github.com/react-navigation/react-navigation/commit/f1b9ccb1f782b5cc3cba2b9a7e843f712e0e99ec)) - by @satya164
+* preserve array and null query params when serializing state to path ([611e450](https://github.com/react-navigation/react-navigation/commit/611e4509fbaf1c3228223747052ee9fcac7d177b)) - by @satya164
+* serialize same-named params at different nesting levels correctly ([b62eee6](https://github.com/react-navigation/react-navigation/commit/b62eee63ab67febbcb1f6a67fc0e9896ce3fce24)) - by @satya164
+* use nested screen from params when creating path ([c04d166](https://github.com/react-navigation/react-navigation/commit/c04d166d08426338ff278fce85e6f89e4fb06fc8)) - by @satya164
+* use union type for route when relevant ([d652e55](https://github.com/react-navigation/react-navigation/commit/d652e5526ed69e59ee3eb4b39375cf416ee26c21)) - by @satya164
+
 ## [7.21.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.21.4...@react-navigation/core@7.21.5) (2026-07-03)
 
 **Note:** Version bump only for package @react-navigation/core

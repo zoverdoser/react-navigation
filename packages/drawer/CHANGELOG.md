@@ -3,6 +3,64 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.14.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.14.0...@react-navigation/drawer@7.14.1) (2026-09-15)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+# [7.14.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.13.10...@react-navigation/drawer@7.14.0) (2026-09-15)
+
+### Features
+
+* use a render callback for custom navigators ([#13238](https://github.com/react-navigation/react-navigation/issues/13238)) ([0706d1a](https://github.com/react-navigation/react-navigation/commit/0706d1aaf3ccc4949cb010af661a542021d392c0)) - by @
+
+## [7.13.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.13.9...@react-navigation/drawer@7.13.10) (2026-08-26)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+## [7.13.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.13.8...@react-navigation/drawer@7.13.9) (2026-08-19)
+
+### Bug Fixes
+
+* read latest state to determine pop to top ([1a29cb4](https://github.com/react-navigation/react-navigation/commit/1a29cb46ffdd54f6e2f2082526bc7a07870d58b5)) - by @satya164
+
+## [7.13.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.13.7...@react-navigation/drawer@7.13.8) (2026-08-07)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+## [7.13.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.13.6...@react-navigation/drawer@7.13.7) (2026-08-05)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+## [7.13.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.13.5...@react-navigation/drawer@7.13.6) (2026-08-04)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+## [7.13.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.13.4...@react-navigation/drawer@7.13.5) (2026-07-24)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+## [7.13.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.13.3...@react-navigation/drawer@7.13.4) (2026-07-20)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+## [7.13.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.13.2...@react-navigation/drawer@7.13.3) (2026-07-20)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+## [7.13.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.13.1...@react-navigation/drawer@7.13.2) (2026-07-17)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+## [7.13.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.13.0...@react-navigation/drawer@7.13.1) (2026-07-17)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+# [7.13.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.12.8...@react-navigation/drawer@7.13.0) (2026-07-16)
+
+### Features
+
+* support drawerItemTestID for drawer navigator ([53f301d](https://github.com/react-navigation/react-navigation/commit/53f301d1eb4a6f4396d62e404758ea85fec8e06a)) - by @satya164
+
 ## [7.12.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.12.7...@react-navigation/drawer@7.12.8) (2026-07-07)
 
 **Note:** Version bump only for package @react-navigation/drawer

@@ -319,13 +319,13 @@ export type NativeStackNavigationOptions = {
   headerBackground?: () => React.ReactNode;
   /**
    * Function which returns a React Element to display on the left side of the header.
-   * This replaces the back button. See `headerBackVisible` to show the back button along side left element.
-   * Will be overriden by `headerLeftItems` on iOS.
+   * This replaces the back button. See `headerBackVisible` to show the back button alongside the left element.
+   * Will be overridden by `headerLeftItems` on iOS.
    */
   headerLeft?: (props: NativeStackHeaderBackProps) => React.ReactNode;
   /**
    * Function which returns a React Element to display on the right side of the header.
-   * Will be overriden by `headerRightItems` on iOS.
+   * Will be overridden by `headerRightItems` on iOS.
    */
   headerRight?: (props: NativeStackHeaderItemProps) => React.ReactNode;
   /**
@@ -427,6 +427,25 @@ export type NativeStackNavigationOptions = {
    * @platform ios, web
    */
   headerBackButtonDisplayMode?: ScreenStackHeaderConfigProps['backButtonDisplayMode'];
+  /**
+   * Option to control which edges of the native header should apply window insets.
+   *
+   * By default, the native header applies window insets to all edges.
+   * Setting an edge to `false` disables its inset for this header and any nested headers.
+   *
+   * A nested header cannot re-enable an inset disabled by a parent,
+   * even by setting the edge to `true`.
+   *
+   * This is an unstable API and might change in the future.
+   *
+   * @platform android
+   */
+  unstable_headerInsets?: {
+    top?: boolean;
+    left?: boolean;
+    right?: boolean;
+    bottom?: boolean;
+  };
   /**
    * Whether the home indicator should prefer to stay hidden on this screen. Defaults to `false`.
    *
@@ -583,7 +602,7 @@ export type NativeStackNavigationOptions = {
    */
   gestureResponseDistance?: ScreenProps['gestureResponseDistance'];
   /**
-   * The type of animation to use when this screen replaces another screen. Defaults to `pop`.
+   * The type of animation to use when this screen replaces another screen. Defaults to `push`.
    *
    * Supported values:
    * - "push": the new screen will perform push animation.

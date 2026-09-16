@@ -6,12 +6,13 @@ import {
   StatusBar,
   StyleSheet,
   useWindowDimensions,
-  View,
+  type ViewProps,
 } from 'react-native';
 import Animated, {
   interpolate,
   ReduceMotion,
   runOnJS,
+  useAnimatedProps,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
@@ -36,6 +37,7 @@ const SWIPE_EDGE_WIDTH = 32;
 const SWIPE_MIN_OFFSET = 5;
 const SWIPE_MIN_DISTANCE = 60;
 const SWIPE_MIN_VELOCITY = 500;
+const PROGRESS_EPSILON = 0.05;
 
 const minmax = (value: number, start: number, end: number) => {
   'worklet';
@@ -103,7 +105,7 @@ export function Drawer({
     [hideStatusBarOnOpen, statusBarAnimation]
   );
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     hideStatusBar(isOpen);
 
     return () => hideStatusBar(false);
@@ -195,8 +197,6 @@ export function Drawer({
           damping: 500,
           mass: 3,
           overshootClamping: true,
-          restDisplacementThreshold: 0.01,
-          restSpeedThreshold: 0.01,
           reduceMotion: ReduceMotion.Never,
         } as any,
         (finished) => runOnJS(onAnimationEnd)(open, finished)
@@ -242,7 +242,7 @@ export function Drawer({
     previousHasDrawerWidthRef.current = hasDrawerWidth;
   }, [getDrawerTranslationX, hasDrawerWidth, isHidden, open, translationX]);
 
-  React.useEffect(() => toggleDrawer(open), [open, toggleDrawer]);
+  React.useLayoutEffect(() => toggleDrawer(open), [open, toggleDrawer]);
 
   const startX = useSharedValue(0);
 
@@ -447,6 +447,34 @@ export function Drawer({
         );
   });
 
+  const contentAnimatedProps = useAnimatedProps<ViewProps>(() => {
+    const hidden =
+      drawerType !== 'permanent' && progress.value >= 1 - PROGRESS_EPSILON;
+
+    if (Platform.OS === 'android') {
+      const importantForAccessibility: ViewProps['importantForAccessibility'] =
+        hidden ? 'no-hide-descendants' : 'auto';
+
+      return { importantForAccessibility };
+    }
+
+    return { accessibilityElementsHidden: hidden };
+  }, [drawerType, progress]);
+
+  const drawerContentAnimatedProps = useAnimatedProps<ViewProps>(() => {
+    const hidden =
+      drawerType !== 'permanent' && progress.value < 1 - PROGRESS_EPSILON;
+
+    if (Platform.OS === 'android') {
+      const importantForAccessibility: ViewProps['importantForAccessibility'] =
+        hidden ? 'no-hide-descendants' : 'auto';
+
+      return { importantForAccessibility };
+    }
+
+    return { accessibilityElementsHidden: hidden };
+  }, [drawerType, progress]);
+
   return (
     <GestureHandlerRootView style={[styles.container, style]}>
       <DrawerProgressContext.Provider value={progress}>
@@ -468,12 +496,12 @@ export function Drawer({
               ]}
             >
               <Animated.View style={[styles.content, contentAnimatedStyle]}>
-                <View
-                  aria-hidden={isOpen && drawerType !== 'permanent'}
+                <Animated.View
+                  animatedProps={contentAnimatedProps}
                   style={styles.content}
                 >
                   {children}
-                </View>
+                </Animated.View>
                 {drawerType !== 'permanent' ? (
                   <Overlay
                     open={open}
@@ -485,6 +513,7 @@ export function Drawer({
                 ) : null}
               </Animated.View>
               <Animated.View
+                animatedProps={drawerContentAnimatedProps}
                 removeClippedSubviews={Platform.OS !== 'ios'}
                 style={[
                   styles.drawer,

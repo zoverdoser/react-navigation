@@ -5,12 +5,12 @@ import type {
   PartialState,
 } from '@react-navigation/routers';
 import escape from 'escape-string-regexp';
-import * as queryString from 'query-string';
 
 import { arrayStartsWith } from './arrayStartsWith';
 import { findFocusedRoute } from './findFocusedRoute';
 import { getPatternParts, type PatternPart } from './getPatternParts';
 import { isArrayEqual } from './isArrayEqual';
+import * as queryString from './queryString';
 import type { PathConfig, PathConfigMap } from './types';
 import { validatePathConfig } from './validatePathConfig';
 
@@ -291,6 +291,7 @@ function getSortedNormalizedConfigs(
         createNormalizedConfigs(key, screens, initialRoutes, [], [], [])
       )
     )
+    .map((config, order) => ({ ...config, order }))
     .sort((a, b) => {
       // Sort config from most specific to least specific:
       // - more segments
@@ -302,7 +303,21 @@ function getSortedNormalizedConfigs(
       // If 2 patterns are same, move the one with less route names up
       // This is an error state, so it's only useful for consistent error messages
       if (isArrayEqual(a.segments, b.segments)) {
-        return b.routeNames.join('>').localeCompare(a.routeNames.join('>'));
+        if (
+          a.routeNames.length > b.routeNames.length &&
+          arrayStartsWith(a.routeNames, b.routeNames)
+        ) {
+          return -1;
+        }
+
+        if (
+          b.routeNames.length > a.routeNames.length &&
+          arrayStartsWith(b.routeNames, a.routeNames)
+        ) {
+          return 1;
+        }
+
+        return a.routeNames.length - b.routeNames.length || a.order - b.order;
       }
 
       // If one of the patterns starts with the other, it's more exhaustive
@@ -807,12 +822,14 @@ const createNestedStateObject = (
 
   if (routes.length > 0) {
     let nestedState = state;
+    let nextRoute = routes.shift();
 
-    while ((route = routes.shift() as ParsedRoute)) {
+    while (nextRoute) {
+      route = nextRoute;
       initialRoute = findInitialRoute(route.name, parentScreens, initialRoutes);
 
       const nestedStateIndex =
-        nestedState.index || nestedState.routes.length - 1;
+        nestedState.index ?? nestedState.routes.length - 1;
 
       nestedState.routes[nestedStateIndex].state = createStateObject(
         initialRoute,
@@ -826,6 +843,7 @@ const createNestedStateObject = (
       }
 
       parentScreens.push(route.name);
+      nextRoute = routes.shift();
     }
   }
 

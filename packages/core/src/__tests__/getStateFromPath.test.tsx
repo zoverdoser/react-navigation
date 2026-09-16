@@ -17,6 +17,28 @@ test('returns undefined for invalid path', () => {
   expect(getStateFromPath<object>('//')).toBeUndefined();
 });
 
+test.each([
+  ['%E=%80%80', '%E=%80%80'],
+  ['%C3', '%C3'],
+  ['%ea%ba%5a%ba', '%ea%baZ%ba'],
+])(
+  'matches the configured route with malformed query value %s',
+  (value, decoded) => {
+    const path = `foo?q=${value}`;
+    const config = { screens: { Foo: 'foo', NotFound: '*' } };
+
+    expect(getStateFromPath(path, config)).toEqual({
+      routes: [
+        {
+          name: 'Foo',
+          params: { q: decoded },
+          path,
+        },
+      ],
+    });
+  }
+);
+
 test('returns undefined for malformed encoded path segment', () => {
   expect(getStateFromPath<object>('foo/%E0%A4%A')).toBeUndefined();
 });
@@ -2620,6 +2642,19 @@ test('throws if two screens map to the same pattern', () => {
       },
     })
   ).not.toThrow();
+});
+
+test('reports equally nested conflicting screens in configuration order', () => {
+  expect(() =>
+    getStateFromPath<object>('/example', {
+      screens: {
+        Alpha: 'example',
+        Zed: 'example',
+      },
+    })
+  ).toThrow(
+    "Found conflicting screens with the same pattern. The pattern 'example' resolves to both 'Alpha' and 'Zed'. Patterns must be unique and cannot resolve to more than one screen."
+  );
 });
 
 test('correctly applies initialRouteName for config with similar route names', () => {

@@ -3,6 +3,78 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.11.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.11.0...@react-navigation/stack@7.11.1) (2026-09-15)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+# [7.11.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.10.24...@react-navigation/stack@7.11.0) (2026-09-15)
+
+### Features
+
+* use a render callback for custom navigators ([#13238](https://github.com/react-navigation/react-navigation/issues/13238)) ([0706d1a](https://github.com/react-navigation/react-navigation/commit/0706d1aaf3ccc4949cb010af661a542021d392c0)) - by @
+
+## [7.10.24](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.10.23...@react-navigation/stack@7.10.24) (2026-08-26)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+## [7.10.23](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.10.22...@react-navigation/stack@7.10.23) (2026-08-19)
+
+### Bug Fixes
+
+* avoid restarting animation unnecessarily in stack ([7bda145](https://github.com/react-navigation/react-navigation/commit/7bda14564a8b1b772f825357be70cfe22136debf)) - by @satya164
+* improve animation lifecycle handling in stack ([ba004a8](https://github.com/react-navigation/react-navigation/commit/ba004a89632eeb34d6c6e93a9db02612b5ce9dd3)) - by @satya164
+* read latest state to determine pop to top ([1a29cb4](https://github.com/react-navigation/react-navigation/commit/1a29cb46ffdd54f6e2f2082526bc7a07870d58b5)) - by @satya164
+
+## [7.10.22](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.10.21...@react-navigation/stack@7.10.22) (2026-08-07)
+
+### Bug Fixes
+
+* fix gestures not working in some scenarios ([9a0117e](https://github.com/react-navigation/react-navigation/commit/9a0117e2b39be0c3ff2c0fb0efff99b4f974c610)), closes [#13208](https://github.com/react-navigation/react-navigation/issues/13208) - by @
+
+## [7.10.21](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.10.20...@react-navigation/stack@7.10.21) (2026-08-07)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+## [7.10.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.10.19...@react-navigation/stack@7.10.20) (2026-08-05)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+## [7.10.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.10.18...@react-navigation/stack@7.10.19) (2026-08-05)
+
+### Bug Fixes
+
+* clear stale inert state after route reset ([#13207](https://github.com/react-navigation/react-navigation/issues/13207)) ([94b0d3f](https://github.com/react-navigation/react-navigation/commit/94b0d3f726e397daa4685342f4efffd35b66ec92)), closes [#13206](https://github.com/react-navigation/react-navigation/issues/13206) - by @hgray-instawork
+
+## [7.10.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.10.17...@react-navigation/stack@7.10.18) (2026-08-04)
+
+### Bug Fixes
+
+* avoid import * in InteractionManager shims ([#13199](https://github.com/react-navigation/react-navigation/issues/13199)) ([1821b06](https://github.com/react-navigation/react-navigation/commit/1821b06b5a441f404083bf90a8e99e4ccd572872)) - by @delekta
+
+## [7.10.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.10.16...@react-navigation/stack@7.10.17) (2026-07-24)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+## [7.10.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.10.15...@react-navigation/stack@7.10.16) (2026-07-20)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+## [7.10.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.10.14...@react-navigation/stack@7.10.15) (2026-07-20)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+## [7.10.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.10.13...@react-navigation/stack@7.10.14) (2026-07-17)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+## [7.10.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.10.12...@react-navigation/stack@7.10.13) (2026-07-17)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+## [7.10.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.10.11...@react-navigation/stack@7.10.12) (2026-07-16)
+
+**Note:** Version bump only for package @react-navigation/stack
+
 ## [7.10.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.10.10...@react-navigation/stack@7.10.11) (2026-07-07)
 
 **Note:** Version bump only for package @react-navigation/stack

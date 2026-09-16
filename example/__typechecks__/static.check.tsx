@@ -53,6 +53,32 @@ expectTypeOf<StaticParamList<typeof NativeStack>>().toMatchTypeOf<{
   Foo: undefined;
 }>();
 
+const NestedStaticStack = createNativeStackNavigator({
+  screens: {
+    Profile: (_: StaticScreenProps<{ id: string }>) => null,
+  },
+});
+
+const StaticRootStack = createNativeStackNavigator({
+  screens: {
+    Home: () => null,
+    Nested: NestedStaticStack,
+  },
+});
+
+createStaticNavigation(StaticRootStack);
+
+type StaticRootParamList = StaticParamList<typeof StaticRootStack>;
+
+expectTypeOf<StaticRootParamList>().toEqualTypeOf<{
+  Home: undefined;
+  Nested:
+    | NavigatorScreenParams<{
+        Profile: { id: string };
+      }>
+    | undefined;
+}>();
+
 const HomeTabs = createBottomTabNavigator({
   screens: {
     Groups: () => null,
@@ -608,7 +634,9 @@ switch (route.name) {
   expectTypeOf<StackComponentProps['screenOptions']>().toMatchTypeOf<
     | StackNavigationOptions
     | ((props: {
-        route: RouteProp<FooParamList, keyof FooParamList>;
+        route:
+          | RouteProp<FooParamList, 'Home'>
+          | RouteProp<FooParamList, 'Profile'>;
         navigation: FooNavigation;
         theme: Theme;
       }) => StackNavigationOptions)
@@ -698,14 +726,92 @@ switch (route.name) {
     expectTypeOf<NavigatorProps['screenOptions']>().toMatchTypeOf<
       | StackNavigationOptions
       | ((props: {
-          route: RouteProp<FooParamList, keyof FooParamList>;
+          route:
+            | RouteProp<FooParamList, 'Profile'>
+            | RouteProp<FooParamList, 'Feed'>;
           navigation: FooNavigation;
           theme: Theme;
         }) => StackNavigationOptions)
       | undefined
     >();
 
-    return <Navigator />;
+    return (
+      <Navigator
+        layout={({ descriptors, children }) => {
+          const descriptor = descriptors.test;
+
+          if (descriptor) {
+            switch (descriptor.route.name) {
+              case 'Profile':
+                expectTypeOf(descriptor.route.params).toEqualTypeOf<
+                  Readonly<{ userId: string }>
+                >();
+                break;
+              case 'Feed':
+                expectTypeOf(descriptor.route.params).toEqualTypeOf<
+                  Readonly<{ sort: 'hot' | 'recent' }>
+                >();
+                break;
+            }
+          }
+
+          return <>{children}</>;
+        }}
+        screenListeners={({ route, navigation }) => {
+          switch (route.name) {
+            case 'Profile':
+              expectTypeOf(route.params).toEqualTypeOf<
+                Readonly<{ userId: string }>
+              >();
+              break;
+            case 'Feed':
+              expectTypeOf(route.params).toEqualTypeOf<
+                Readonly<{ sort: 'hot' | 'recent' }>
+              >();
+              break;
+          }
+
+          expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+          return {};
+        }}
+        screenLayout={({ route, navigation, theme, children }) => {
+          switch (route.name) {
+            case 'Profile':
+              expectTypeOf(route.params).toEqualTypeOf<
+                Readonly<{ userId: string }>
+              >();
+              break;
+            case 'Feed':
+              expectTypeOf(route.params).toEqualTypeOf<
+                Readonly<{ sort: 'hot' | 'recent' }>
+              >();
+              break;
+          }
+
+          expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+          expectTypeOf(theme).toEqualTypeOf<Theme>();
+
+          return <>{children}</>;
+        }}
+        screenOptions={({ route }) => {
+          switch (route.name) {
+            case 'Profile':
+              expectTypeOf(route.params).toEqualTypeOf<
+                Readonly<{ userId: string }>
+              >();
+              break;
+            case 'Feed':
+              expectTypeOf(route.params).toEqualTypeOf<
+                Readonly<{ sort: 'hot' | 'recent' }>
+              >();
+              break;
+          }
+
+          return {};
+        }}
+      />
+    );
   });
 
   expectTypeOf(Stack).not.toHaveProperty('with');

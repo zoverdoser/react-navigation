@@ -44,6 +44,40 @@ const DEFAULT_ACTIVE_COLOR = 'rgba(255, 255, 255, 1)';
 const DEFAULT_INACTIVE_COLOR = 'rgba(255, 255, 255, 0.7)';
 const ICON_SIZE = 24;
 
+const getActiveOpacity = (
+  position: Animated.AnimatedInterpolation<number>,
+  routesLength: number,
+  tabIndex: number
+) => {
+  if (routesLength > 1) {
+    const inputRange = Array.from({ length: routesLength }, (_, i) => i);
+
+    return position.interpolate({
+      inputRange,
+      outputRange: inputRange.map((i) => (i === tabIndex ? 1 : 0)),
+    });
+  }
+
+  return 1;
+};
+
+const getInactiveOpacity = (
+  position: Animated.AnimatedInterpolation<number>,
+  routesLength: number,
+  tabIndex: number
+) => {
+  if (routesLength > 1) {
+    const inputRange = Array.from({ length: routesLength }, (_, i) => i);
+
+    return position.interpolate({
+      inputRange,
+      outputRange: inputRange.map((i) => (i === tabIndex ? 0 : 1)),
+    });
+  }
+
+  return 0;
+};
+
 type TabBarItemInternalProps<T extends Route> = Omit<
   Props<T>,
   | 'navigationState'
@@ -119,18 +153,16 @@ const TabBarItemInternal = <T extends Route>({
     };
   }, [position, ReAnimatedProgress, tabIndex, route.key]);
 
-  const ReAnimatedStyleRef = React.useRef(
-    useAnimatedStyle(() => {
-      const color = interpolateColor(
-        ReAnimatedProgress.value,
-        [0, 1],
-        [inactiveColor, activeColor]
-      );
-      return { color };
-    }, [ReAnimatedProgress, activeColor, inactiveColor])
-  );
+  const reanimatedStyle = useAnimatedStyle(() => {
+    const color = interpolateColor(
+      ReAnimatedProgress.value,
+      [0, 1],
+      [inactiveColor, activeColor]
+    );
+    return { color };
+  }, [ReAnimatedProgress, activeColor, inactiveColor]);
 
-  const opacity = animatedStyles?.opacity
+  const itemOpacity = animatedStyles?.opacity
     ? position.interpolate({
         inputRange,
         outputRange: inputRange.map((i) =>
@@ -141,6 +173,9 @@ const TabBarItemInternal = <T extends Route>({
         extrapolate: 'clamp',
       })
     : 1;
+
+  const activeOpacity = getActiveOpacity(position, routesLength, tabIndex);
+  const inactiveOpacity = getInactiveOpacity(position, routesLength, tabIndex);
 
   const scale = animatedStyles?.scale
     ? position.interpolate({
@@ -157,19 +192,40 @@ const TabBarItemInternal = <T extends Route>({
       return null;
     }
 
-    const iconEle = customIcon({
-      focused: isFocused,
-      color: ReAnimatedStyleRef.current.color,
+    const inactiveIcon = customIcon({
+      focused: false,
+      color: inactiveColor,
+      size: ICON_SIZE,
+      route,
+    });
+
+    const activeIcon = customIcon({
+      focused: true,
+      color: activeColor,
       size: ICON_SIZE,
       route,
     });
 
     return (
       <View style={styles.icon}>
-        <Animated.View style={{ opacity }}>{iconEle}</Animated.View>
+        <Animated.View style={{ opacity: inactiveOpacity }}>
+          {inactiveIcon}
+        </Animated.View>
+        <Animated.View
+          style={[StyleSheet.absoluteFill, { opacity: activeOpacity }]}
+        >
+          {activeIcon}
+        </Animated.View>
       </View>
     );
-  }, [route, customIcon, isFocused, ReAnimatedStyleRef, opacity]);
+  }, [
+    activeColor,
+    activeOpacity,
+    customIcon,
+    inactiveColor,
+    inactiveOpacity,
+    route,
+  ]);
 
   const renderLabel = React.useCallback(
     () =>
@@ -177,7 +233,7 @@ const TabBarItemInternal = <T extends Route>({
         customlabel({
           focused: isFocused,
           style: labelStyle,
-          animatedStyles: ReAnimatedStyleRef.current,
+          animatedStyles: reanimatedStyle,
           labelText,
           allowFontScaling: labelAllowFontScaling,
           route,
@@ -187,7 +243,7 @@ const TabBarItemInternal = <T extends Route>({
           icon={icon}
           label={labelText}
           style={labelStyle}
-          animatedStyles={ReAnimatedStyleRef.current}
+          animatedStyles={reanimatedStyle}
           labelAllowFontScaling={labelAllowFontScaling}
         />
       ),
@@ -199,7 +255,7 @@ const TabBarItemInternal = <T extends Route>({
       route,
       icon,
       isFocused,
-      ReAnimatedStyleRef,
+      reanimatedStyle,
     ]
   );
 
@@ -232,7 +288,11 @@ const TabBarItemInternal = <T extends Route>({
     >
       <Animated.View
         pointerEvents="none"
-        style={[styles.item, tabStyle, { opacity, transform: [{ scale }] }]}
+        style={[
+          styles.item,
+          tabStyle,
+          { opacity: itemOpacity, transform: [{ scale }] },
+        ]}
       >
         {icon}
         <View>{renderLabel()}</View>

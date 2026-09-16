@@ -3,6 +3,56 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.7.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.7.0...@react-navigation/material-top-tabs@7.7.1) (2026-09-15)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [7.7.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.6.17...@react-navigation/material-top-tabs@7.7.0) (2026-09-15)
+
+### Features
+
+* use a render callback for custom navigators ([#13238](https://github.com/react-navigation/react-navigation/issues/13238)) ([0706d1a](https://github.com/react-navigation/react-navigation/commit/0706d1aaf3ccc4949cb010af661a542021d392c0)) - by @
+
+## [7.6.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.6.16...@react-navigation/material-top-tabs@7.6.17) (2026-08-26)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+## [7.6.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.6.15...@react-navigation/material-top-tabs@7.6.16) (2026-08-19)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+## [7.6.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.6.14...@react-navigation/material-top-tabs@7.6.15) (2026-08-07)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+## [7.6.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.6.13...@react-navigation/material-top-tabs@7.6.14) (2026-08-05)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+## [7.6.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.6.12...@react-navigation/material-top-tabs@7.6.13) (2026-07-24)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+## [7.6.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.6.11...@react-navigation/material-top-tabs@7.6.12) (2026-07-20)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+## [7.6.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.6.10...@react-navigation/material-top-tabs@7.6.11) (2026-07-20)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+## [7.6.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.6.9...@react-navigation/material-top-tabs@7.6.10) (2026-07-17)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+## [7.6.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.6.8...@react-navigation/material-top-tabs@7.6.9) (2026-07-17)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+## [7.6.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.6.7...@react-navigation/material-top-tabs@7.6.8) (2026-07-16)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
 ## [7.6.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.6.6...@react-navigation/material-top-tabs@7.6.7) (2026-07-07)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs

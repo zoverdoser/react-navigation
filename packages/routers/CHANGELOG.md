@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.6.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.6.3...@react-navigation/routers@7.6.4) (2026-07-20)
+
+### Bug Fixes
+
+* create fresh route object when key changes in tab ([4c49c07](https://github.com/react-navigation/react-navigation/commit/4c49c070b28cf92737b85962a945be6d75557eea)) - by @satya164
+* filter preloaded routes on route config changes ([c032678](https://github.com/react-navigation/react-navigation/commit/c0326785129b1774108d4a151a61b238c1416c74)) - by @satya164
+* prevent popTo from matching routes above source ([46de2ce](https://github.com/react-navigation/react-navigation/commit/46de2ce795d7f83c2f5046a44f167ba5d0e752d8)) - by @satya164
+* update correct route params in tab history ([634cd4f](https://github.com/react-navigation/react-navigation/commit/634cd4ff509861e072867e9d028ab7248bbf0888)) - by @satya164
+* update route on repeated preload instead of replacing ([85378e4](https://github.com/react-navigation/react-navigation/commit/85378e45d00007374352ebc5f4334a0594fe2050)) - by @satya164
+* update route params in tab history on preload ([6ab10e0](https://github.com/react-navigation/react-navigation/commit/6ab10e0b36984464aa904beecb909cee2dcff784)) - by @satya164
+
+## [7.6.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.6.2...@react-navigation/routers@7.6.3) (2026-07-20)
+
+**Note:** Version bump only for package @react-navigation/routers
+
+## [7.6.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.6.1...@react-navigation/routers@7.6.2) (2026-07-17)
+
+### Bug Fixes
+
+* fall back to first route if initial route isn't present when rehydrating ([5b8e84d](https://github.com/react-navigation/react-navigation/commit/5b8e84d52ea3c034f70b49b7c228732edaa6bb34)) - by @
+
+## [7.6.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.6.0...@react-navigation/routers@7.6.1) (2026-07-16)
+
+### Bug Fixes
+
+* add focused route to history when preload replaces it ([0c702e8](https://github.com/react-navigation/react-navigation/commit/0c702e817229c311909b3e6781b50e4cd24bea92)) - by @satya164
+* don't handle reset for non-stale state with an invalid index ([a106df1](https://github.com/react-navigation/react-navigation/commit/a106df16db2298a04b06a65a88ec18610d2f024d)) - by @satya164
+* fix incorrect tab history after navigationKey changes ([b94faca](https://github.com/react-navigation/react-navigation/commit/b94faca34ed4676151ccb4825af8ca2e47a6b427)) - by @satya164
+* focus most recent route in history when focused route is removed ([4411424](https://github.com/react-navigation/react-navigation/commit/4411424e02fbecc499754f2a9697b96bdb4807ae)) - by @satya164
+* keep initial route params when going back with fullHistory ([82c473f](https://github.com/react-navigation/react-navigation/commit/82c473f4dd3230432efed725bfd05458815225c6)) - by @satya164
+* preserve drawer status in history when changing index ([a841d14](https://github.com/react-navigation/react-navigation/commit/a841d142180f55fd2afe6bfadf169c5714cfc252)) - by @satya164
+* remove stale history entries when getId changes the route key ([c2acdc5](https://github.com/react-navigation/react-navigation/commit/c2acdc57d7a5df84c67c3154f303969b56d37558)) - by @satya164
+
 # [7.6.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.5.6...@react-navigation/routers@7.6.0) (2026-06-11)
 
 ### Features

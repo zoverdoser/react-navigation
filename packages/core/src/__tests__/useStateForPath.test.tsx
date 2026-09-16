@@ -13,16 +13,12 @@ import { MockRouter } from './__fixtures__/MockRouter';
 
 test('gets focused route state at root', () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
-      </NavigationContent>
-    );
+    return render(state.routes.map((route) => descriptors[route.key].render()));
   };
 
   const TestScreen = () => {
@@ -71,16 +67,12 @@ test('gets focused route state at root', () => {
 
 test('gets focused route state in nested navigator', () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
-      </NavigationContent>
-    );
+    return render(state.routes.map((route) => descriptors[route.key].render()));
   };
 
   const TestScreen = () => {
@@ -201,16 +193,12 @@ test('gets path in each screen', () => {
   };
 
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
-      </NavigationContent>
-    );
+    return render(state.routes.map((route) => descriptors[route.key].render()));
   };
 
   const TestScreen = () => {
@@ -265,7 +253,7 @@ test('gets path in each screen', () => {
 
   expect(screen).toMatchInlineSnapshot(`
 [
-  "bar: /mybar/42?screen=bar-b",
+  "bar: /mybar/42/b",
   "bar-a: /mybar/42/a",
   "bar-b: /mybar/42/b",
   "xux: /myxux",
@@ -276,7 +264,7 @@ test('gets path in each screen', () => {
 
   expect(screen).toMatchInlineSnapshot(`
 [
-  "bar: /mybar/42?screen=bar-b",
+  "bar: /mybar/42/b",
   "bar-a: /mybar/42/a",
   "bar-b: /mybar/42/b",
   "xux: /myxux",
@@ -287,7 +275,7 @@ test('gets path in each screen', () => {
 
   expect(screen).toMatchInlineSnapshot(`
 [
-  "bar: /mybar/42?screen=bar-b",
+  "bar: /mybar/42/b",
   "bar-a: /mybar/42/a",
   "bar-b: /mybar/42/b",
   "xux: /myxux?fruit=apple",

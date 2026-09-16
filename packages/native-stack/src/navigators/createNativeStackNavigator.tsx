@@ -36,7 +36,7 @@ function NativeStackNavigator({
   UNSTABLE_router,
   ...rest
 }: NativeStackNavigatorProps) {
-  const { state, describe, descriptors, navigation, NavigationContent } =
+  const { state, describe, descriptors, navigation, render } =
     useNavigationBuilder<
       StackNavigationState<ParamListBase>,
       StackRouterOptions,
@@ -64,39 +64,48 @@ function NativeStackNavigator({
       return;
     }
 
+    let handle: ReturnType<typeof requestAnimationFrame> | undefined;
+
     // @ts-expect-error: there may not be a tab navigator in parent
-    return navigation?.addListener?.('tabPress', (e: any) => {
+    const unsubscribe = navigation.addListener?.('tabPress', (e) => {
       const isFocused = navigation.isFocused();
+
+      cancelAnimationFrame(handle);
 
       // Run the operation in the next frame so we're sure all listeners have been run
       // This is necessary to know if preventDefault() has been called
-      requestAnimationFrame(() => {
+      handle = requestAnimationFrame(() => {
+        const currentState = navigation.getState();
+
         if (
-          state.index > 0 &&
           isFocused &&
+          currentState.index > 0 &&
           !(e as EventArg<'tabPress', true>).defaultPrevented
         ) {
           // When user taps on already focused tab and we're inside the tab,
           // reset the stack to replicate native behaviour
           navigation.dispatch({
             ...StackActions.popToTop(),
-            target: state.key,
+            target: currentState.key,
           });
         }
       });
     });
-  }, [meta, navigation, state.index, state.key]);
 
-  return (
-    <NavigationContent>
-      <NativeStackView
-        {...rest}
-        state={state}
-        navigation={navigation}
-        descriptors={descriptors}
-        describe={describe}
-      />
-    </NavigationContent>
+    return () => {
+      cancelAnimationFrame(handle);
+      unsubscribe?.();
+    };
+  }, [meta, navigation]);
+
+  return render(
+    <NativeStackView
+      {...rest}
+      state={state}
+      navigation={navigation}
+      descriptors={descriptors}
+      describe={describe}
+    />
   );
 }
 
