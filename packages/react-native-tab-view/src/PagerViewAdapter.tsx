@@ -216,6 +216,8 @@ export function PagerViewAdapter<T extends Route>({
         onPageSelected={(e) => {
           const index = e.nativeEvent.position;
           indexRef.current = index;
+          position.setValue(index);
+          offset.setValue(0);
           animatedPosition.value = index;
           onIndexChange(index);
           onTabSelect?.({ index });
