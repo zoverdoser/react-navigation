@@ -13,6 +13,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native';
+import type { SharedValue } from 'react-native-reanimated';
 
 import {
   type Props as IndicatorProps,
@@ -43,6 +44,7 @@ export type Props<T extends Route> = SceneRendererProps & {
   renderTabBarItem?: (
     props: TabBarItemProps<T> & { key: string }
   ) => React.ReactElement;
+  reanimatedPosition?: SharedValue<number>;
   onTabPress?: (scene: Scene<T> & Event) => void;
   onTabLongPress?: (scene: Scene<T>) => void;
   tabStyle?: StyleProp<ViewStyle>;
@@ -336,7 +338,7 @@ export function TabBar<T extends Route>({
   jumpTo,
   navigationState,
   position,
-  animatedPosition,
+  reanimatedPosition,
   bounces,
   contentContainerStyle,
   indicatorContainerStyle,
@@ -541,7 +543,7 @@ export function TabBar<T extends Route>({
       const props = {
         ...rest,
         position,
-        animatedPosition,
+        reanimatedPosition,
         route,
         navigationState,
         testID,
@@ -572,7 +574,7 @@ export function TabBar<T extends Route>({
     },
     [
       position,
-      animatedPosition,
+      reanimatedPosition,
       navigationState,
       options,
       pressColor,
@@ -633,6 +635,7 @@ export function TabBar<T extends Route>({
       >
         {renderIndicator({
           position,
+          reanimatedPosition,
           layout,
           navigationState,
           jumpTo,

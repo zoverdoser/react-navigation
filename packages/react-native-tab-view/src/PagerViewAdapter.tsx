@@ -43,7 +43,7 @@ type Props<T extends Route> = PagerProps & {
       // It can include fractional digits as it represents the intermediate value
       position: Animated.AnimatedInterpolation<number>;
       // Reanimated value updated directly from the native page scroll event
-      animatedPosition: SharedValue<number>;
+      reanimatedPosition: SharedValue<number>;
       // Function to actually render the content of the pager
       // The parent component takes care of rendering
       render: (children: React.ReactNode) => React.ReactNode;
@@ -77,13 +77,13 @@ export function PagerViewAdapter<T extends Route>({
 
   const position = useAnimatedValue(index);
   const offset = useAnimatedValue(0);
-  const animatedPosition = useSharedValue(index);
+  const reanimatedPosition = useSharedValue(index);
 
   const onPageScroll = useEvent<PagerViewOnPageScrollEventData>(
     (event) => {
       'worklet';
       if (event.eventName.endsWith('onPageScroll')) {
-        animatedPosition.value = event.position + event.offset;
+        reanimatedPosition.value = event.position + event.offset;
       }
     },
     ['onPageScroll']
@@ -121,7 +121,7 @@ export function PagerViewAdapter<T extends Route>({
     } else {
       pagerRef.current?.setPageWithoutAnimation(index);
       position.setValue(index);
-      animatedPosition.value = index;
+      reanimatedPosition.value = index;
     }
 
     onIndexChange(index);
@@ -138,7 +138,7 @@ export function PagerViewAdapter<T extends Route>({
       } else {
         pagerRef.current?.setPageWithoutAnimation(index);
         position.setValue(index);
-        animatedPosition.value = index;
+        reanimatedPosition.value = index;
       }
     }
   }, [
@@ -146,7 +146,7 @@ export function PagerViewAdapter<T extends Route>({
     index,
     animationEnabled,
     position,
-    animatedPosition,
+    reanimatedPosition,
   ]);
 
   const onPageScrollStateChanged = (
@@ -156,7 +156,7 @@ export function PagerViewAdapter<T extends Route>({
 
     switch (pageScrollState) {
       case 'idle':
-        // offset.setValue(0);
+        offset.setValue(0);
         onSwipeEnd?.();
         return;
       case 'dragging': {
@@ -196,7 +196,7 @@ export function PagerViewAdapter<T extends Route>({
 
   return children({
     position: memoizedPosition,
-    animatedPosition,
+    reanimatedPosition,
     addEnterListener,
     jumpTo,
     render: (children) => (
@@ -218,7 +218,7 @@ export function PagerViewAdapter<T extends Route>({
           indexRef.current = index;
           position.setValue(index);
           offset.setValue(0);
-          animatedPosition.value = index;
+          reanimatedPosition.value = index;
           onIndexChange(index);
           onTabSelect?.({ index });
         }}

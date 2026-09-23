@@ -8,6 +8,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native';
+import type { SharedValue } from 'react-native-reanimated';
 
 import { Pager } from './Pager';
 import { SceneView } from './SceneView';
@@ -30,6 +31,7 @@ export type Props<T extends Route> = Omit<PagerProps, 'layoutDirection'> & {
   renderTabBar?: (
     props: SceneRendererProps & {
       navigationState: NavigationState<T>;
+      reanimatedPosition?: SharedValue<number>;
       options: Record<string, TabDescriptor<T>> | undefined;
     }
   ) => React.ReactNode;
@@ -132,12 +134,17 @@ export function TabView<T extends Route>({
         style={pagerStyle}
         layoutDirection={direction}
       >
-        {({ position, animatedPosition, render, addEnterListener, jumpTo }) => {
+        {({
+          position,
+          reanimatedPosition,
+          render,
+          addEnterListener,
+          jumpTo,
+        }) => {
           // All the props here must not change between re-renders
           // This is crucial to optimizing the routes with PureComponent
           const sceneRendererProps = {
             position,
-            animatedPosition,
             layout,
             jumpTo,
           };
@@ -147,6 +154,7 @@ export function TabView<T extends Route>({
               {tabBarPosition === 'top' &&
                 renderTabBar({
                   ...sceneRendererProps,
+                  reanimatedPosition,
                   options,
                   navigationState,
                 })}
@@ -180,6 +188,7 @@ export function TabView<T extends Route>({
               {tabBarPosition === 'bottom' &&
                 renderTabBar({
                   ...sceneRendererProps,
+                  reanimatedPosition,
                   options,
                   navigationState,
                 })}

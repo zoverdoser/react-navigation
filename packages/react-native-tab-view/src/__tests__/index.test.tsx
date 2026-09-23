@@ -84,8 +84,8 @@ const Test = ({
       renderTabBar={
         onRenderTabBar == null
           ? undefined
-          : ({ animatedPosition }) => {
-              onRenderTabBar(animatedPosition);
+          : ({ reanimatedPosition }) => {
+              onRenderTabBar(reanimatedPosition);
               return null;
             }
       }
@@ -111,17 +111,17 @@ describe.each([{ type: 'ios' as const }, { type: 'web' as const }])(
     });
 
     test('provides a UI-thread position for the native pager', () => {
-      let animatedPosition: SharedValue<number> | undefined;
+      let reanimatedPosition: SharedValue<number> | undefined;
 
       render(
         <Test
           onRenderTabBar={(position) => {
-            animatedPosition = position;
+            reanimatedPosition = position;
           }}
         />
       );
 
-      expect(animatedPosition).toBeDefined();
+      expect(reanimatedPosition).toBeDefined();
     });
 
     test('switches tabs on tab press in the tab bar', async () => {

@@ -29,7 +29,7 @@ import type {
 
 export type Props<T extends Route> = TabDescriptor<T> & {
   position: Animated.AnimatedInterpolation<number>;
-  animatedPosition?: SharedValue<number>;
+  reanimatedPosition?: SharedValue<number>;
   route: T;
   navigationState: NavigationState<T>;
   pressColor?: string;
@@ -71,7 +71,7 @@ const TabBarItemInternal = <T extends Route>({
   onPress,
   isFocused,
   position,
-  animatedPosition,
+  reanimatedPosition,
   style,
   labelStyle,
   onLayout,
@@ -108,7 +108,7 @@ const TabBarItemInternal = <T extends Route>({
   const fallbackProgress = useSharedValue(isFocused ? 1 : 0);
 
   React.useEffect(() => {
-    if (animatedPosition != null) {
+    if (reanimatedPosition != null) {
       return;
     }
 
@@ -121,15 +121,15 @@ const TabBarItemInternal = <T extends Route>({
     return () => {
       position.removeListener(listenerId);
     };
-  }, [animatedPosition, fallbackProgress, position, tabIndex]);
+  }, [reanimatedPosition, fallbackProgress, position, tabIndex]);
 
   const reanimatedProgress = useDerivedValue(() => {
-    if (animatedPosition != null) {
-      return Math.max(0, 1 - Math.abs(tabIndex - animatedPosition.value));
+    if (reanimatedPosition != null) {
+      return Math.max(0, 1 - Math.abs(tabIndex - reanimatedPosition.value));
     }
 
     return fallbackProgress.value;
-  }, [animatedPosition, fallbackProgress, tabIndex]);
+  }, [reanimatedPosition, fallbackProgress, tabIndex]);
 
   const reanimatedStyle = useAnimatedStyle(() => {
     const color = interpolateColor(

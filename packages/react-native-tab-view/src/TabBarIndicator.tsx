@@ -7,6 +7,7 @@ import {
   StyleSheet,
   type ViewStyle,
 } from 'react-native';
+import { type SharedValue } from 'react-native-reanimated';
 
 import type {
   LocaleDirection,
@@ -23,6 +24,7 @@ export type Props<T extends Route> = SceneRendererProps & {
   width: 'auto' | `${number}%` | number;
   getTabWidth: GetTabWidth;
   direction: LocaleDirection;
+  reanimatedPosition?: SharedValue<number>;
   style?: StyleProp<ViewStyle>;
   gap?: number;
   children?: React.ReactNode;
@@ -102,21 +104,17 @@ const getTranslateX = (
   getWidth?: (index: number) => number | undefined
 ) => {
   const inputRange = routes.map((_, i) => i);
+  let tabOffset = 0;
   const outputRange = routes.map((_, i) => {
-    let sumTabWidth = 0;
-
-    for (let j = 0; j < i; j++) {
-      sumTabWidth += getTabWidth(j);
-    }
-
+    const tabWidth = getTabWidth(i);
     const indicatorWidth = getWidth?.(i);
-    const tabOffset = sumTabWidth + (gap ? gap * i : 0);
+    const translateX =
+      tabOffset +
+      (indicatorWidth === undefined ? 0 : (tabWidth - indicatorWidth) / 2);
 
-    if (indicatorWidth === undefined) {
-      return tabOffset;
-    }
+    tabOffset += tabWidth + (gap ?? 0);
 
-    return tabOffset + getTabWidth(i) / 2 - indicatorWidth / 2;
+    return translateX;
   });
 
   const translateX = position.interpolate({
@@ -133,6 +131,7 @@ export function TabBarIndicator<T extends Route>({
   layout,
   navigationState,
   position,
+  // reanimatedPosition,
   width,
   direction,
   gap,
@@ -140,7 +139,7 @@ export function TabBarIndicator<T extends Route>({
   children,
 }: Props<T>) {
   const isIndicatorShown = React.useRef(false);
-  const isWidthDynamic = width === 'auto';
+  const isWidthDynamic = width === 'auto' || !!children;
 
   const flattenedStyle = StyleSheet.flatten(style);
 
@@ -158,6 +157,9 @@ export function TabBarIndicator<T extends Route>({
     hasCustomIndicatorWidth &&
     (flattenedStyle?.margin === 'auto' ||
       flattenedStyle?.marginHorizontal === 'auto');
+  // Keep the animated path on tab centers when a custom indicator changes width.
+  const centerCustomIndicator =
+    !!children && typeof width === 'number' && !hasCustomIndicatorWidth;
 
   // If indicator has a custom width, we need to adjust calculations to account for it
   // It should be centered relative to the tab if the margin is set to auto
@@ -211,9 +213,13 @@ export function TabBarIndicator<T extends Route>({
   const translateX =
     layout.width && routes.length > 1
       ? getTranslateX(position, routes, getTabWidth, direction, gap, (index) =>
-          getCenteredIndicatorWidth(getTabWidth(index))
+          centerCustomIndicator
+            ? 0
+            : getCenteredIndicatorWidth(getTabWidth(index))
         )
-      : 0;
+      : centerCustomIndicator && routes.length === 1
+        ? ((direction === 'rtl' ? -1 : 1) * getTabWidth(0)) / 2
+        : 0;
 
   transform.push({ translateX });
 
@@ -310,8 +316,9 @@ export function TabBarIndicator<T extends Route>({
       style={[
         styles.indicator,
         styleList,
-        width === 'auto' ? { opacity: opacity } : null,
+        isWidthDynamic ? { opacity: opacity } : null,
         finalStyle,
+        centerCustomIndicator ? { start: -width / 2 } : null,
       ]}
     >
       {children}
