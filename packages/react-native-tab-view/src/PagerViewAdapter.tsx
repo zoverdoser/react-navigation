@@ -202,6 +202,7 @@ export function PagerViewAdapter<T extends Route>({
     render: (children) => (
       <AnimatedViewPager
         {...rest}
+        layout={undefined}
         ref={pagerRef}
         style={[styles.container, style]}
         initialPage={index}
